@@ -331,11 +331,13 @@ namespace Unity.Simulation.Warehouse
             {
                 return;
             }
+#if UNITY_EDITOR
             if (PrefabUtility.IsPartOfAnyPrefab(o))
             {
                 PrefabUtility.UnpackPrefabInstance(GetPrefabRoot(o.transform), PrefabUnpackMode.Completely,
                     InteractionMode.AutomatedAction);
             }
+#endif //UNITY_EDITOR
             if (!Application.isPlaying)
             {
                 Object.DestroyImmediate(o);
@@ -353,6 +355,7 @@ namespace Unity.Simulation.Warehouse
         /// <returns>Last GameObject in the hierarchy to be part of a prefab</returns>
         static GameObject GetPrefabRoot(Transform obj)
         {
+#if UNITY_EDITOR
             if (!PrefabUtility.IsPartOfAnyPrefab(obj.gameObject))
             {
                 Debug.LogWarning($"{obj} is not part of a prefab!");
@@ -365,6 +368,9 @@ namespace Unity.Simulation.Warehouse
             }
 
             return GetPrefabRoot(obj.parent);
+#else
+            return null;
+#endif
         }
     }
 }
